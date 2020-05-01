@@ -1,5 +1,7 @@
 package com.projectx.service;
 
+import java.util.Optional;
+
 import com.projectx.model.User;
 import com.projectx.repository.UserRepository;
 import com.projectx.utils.UserValidator;
@@ -21,6 +23,14 @@ public class UserService {
             userRepository.save(user);
         }else{
             throw new Exception("Dados inválidos");
+        }
+    }
+
+    public User findUser(String cpf) {
+        if(cpf != null) {
+            return userRepository.findBycpf(cpf);
+        }else {
+            return null;
         }
     }
 }
