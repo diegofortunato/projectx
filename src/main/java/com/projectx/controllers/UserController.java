@@ -4,6 +4,7 @@ import com.projectx.model.User;
 import com.projectx.service.MongoDbService;
 import com.projectx.service.UserService;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +16,8 @@ import java.text.ParseException;
 
 @RestController
 @AllArgsConstructor
-public class HelloController {
+@NoArgsConstructor
+public class UserController {
 
 	private UserService userService;
 

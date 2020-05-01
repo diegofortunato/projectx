@@ -18,5 +18,5 @@ public class User {
     private Integer id;
     private String name;
     private String document;
-    private ArrayList<Date> arrayList;
+    private ArrayList<String> arrayList;
 }
