@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class User {
 
     @Id
-    private Integer id;
+    private Long id;
     private String name;
     private String document;
     private ArrayList<String> arrayList;

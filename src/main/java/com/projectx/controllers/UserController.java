@@ -15,19 +15,21 @@ import org.springframework.web.bind.annotation.RestController;
 import java.text.ParseException;
 
 @RestController
-@AllArgsConstructor
-@NoArgsConstructor
 public class UserController {
 
 	private UserService userService;
 
+	public UserController(UserService userService) {
+		this.userService = userService;
+	}
+
 	@PostMapping(value = "/saveUser")
-	public ResponseEntity saveUser(@RequestBody User user) {
+	public ResponseEntity<User> saveUser(@RequestBody User user) {
 		try {
 			userService.saveUser(user);
-			return new ResponseEntity(HttpStatus.CREATED);
+			return new ResponseEntity<User>(user, HttpStatus.CREATED);
 		}catch (Exception e){
-			return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<User>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 }

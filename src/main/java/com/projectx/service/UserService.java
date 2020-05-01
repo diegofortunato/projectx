@@ -2,20 +2,22 @@ package com.projectx.service;
 
 import com.projectx.model.User;
 import com.projectx.repository.UserRepository;
-import com.projectx.utils.CpfValidator;
-import lombok.AllArgsConstructor;
+import com.projectx.utils.UserValidator;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Service;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
+@Service
 public class UserService {
 
     UserRepository userRepository;
 
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     public void saveUser(User user) throws Exception {
-        if (CpfValidator.isAValidCpf(user.getDocument())){
+        if (UserValidator.isAValidCpf(user.getDocument())){
             userRepository.save(user);
         }else{
             throw new Exception("Dados inválidos");
