@@ -11,6 +11,20 @@ import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
+
+@EnableMongoRepositories(basePackageClasses = UserRepository.class)
+@Configuration
+public class MongoDBConfig {
+    /*@Bean
+    CommandLineRunner commandLineRunner(UserRepository userRepository){
+        return strings -> {
+            userRepository.save(new User(1, "Fernando AAA", "12345678"));
+            userRepository.save(new User(2, "Souza", "12345678"));
+            userRepository.save(new User(4, "Henrique", "12345678"));
+        };
+    }*/
+}
+
 /*@EnableMongoRepositories(basePackageClasses = UserRepository.class)
 @Configuration
 public class MongoDBConfig {
@@ -24,6 +38,7 @@ public class MongoDBConfig {
         return new MongoTemplate(mongo(), "test");
     }
 }*/
+/*
 @Configuration
 @EnableMongoRepositories
 class ApplicationConfig extends AbstractMongoClientConfiguration {
@@ -37,4 +52,4 @@ class ApplicationConfig extends AbstractMongoClientConfiguration {
     protected String getDatabaseName() {
         return "springdata";
     }
-}
+}*/
