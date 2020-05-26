@@ -14,7 +14,9 @@ public interface UserRepository extends MongoRepository<User, Integer> {
     // @Query(value="SELECT p.* FROM predefined_response p WHERE p.question_id=:id", nativeQuery = true)
     // User findAllBycpf(@Param("cpf") String cpf);
 
-    @Query("{ 'document' : ?0 }")
-    Optional<User> findBycpf(String cpf);
+    @Query("{ 'email' : ?0 }")
+    Optional<User> findByEmail(String cpf);
 
+    @Query("{ 'emailSHA512' : ?0 }")
+    Optional<User> findByEmailHash(String hash);
 }

@@ -1,43 +1,52 @@
 package com.projectx.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
 import com.projectx.model.User;
 import com.projectx.repository.UserRepository;
-import com.projectx.utils.UserValidator;
 import lombok.Data;
 import org.springframework.stereotype.Service;
-
-import java.text.SimpleDateFormat;
 
 @Data
 @Service
 public class UserService {
 
     UserRepository userRepository;
+    SenderMailService senderMailService;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, SenderMailService senderMailService) {
         this.userRepository = userRepository;
+        this.senderMailService = senderMailService;
     }
 
-    public void validateAndSaveUser(User user) throws Exception {
-        Optional<User> optionalUser = userRepository.findBycpf(user.getDocument());
+    public Optional<User> validateAndSaveUser(User user) throws Exception {
+        Optional<User> optionalUser = userRepository.findByEmail(user.getEmail());
         if (optionalUser.isPresent()) {
-            updatedUserDateList(user, optionalUser);
-            userRepository.save(optionalUser.get());
+            if (optionalUser.get().getVerifiedEmail()) {
+                return Optional.of(operatePresentUser(user, optionalUser));
+            }else {
+                /*TODO EMAIL NÃO VERIFICADO*/
+                return Optional.empty();
+            }
         } else {
-            userRepository.save(user);
+            return Optional.of(operateNewUser(user));
         }
+    }
 
+    private User operatePresentUser(User user, Optional<User> optionalUser) throws NoSuchAlgorithmException {
+        optionalUser.get().setVerifiedEmail(true);
+        updatedUserDateList(user, optionalUser);
+        return userRepository.save(optionalUser.get());
+    }
 
-   /*     if (UserValidator.isAValidCpf(user.getDocument())){
-            userRepository.save(user);
-        }else{
-            throw new Exception("Dados inválidos");
-        }*/
+    private User operateNewUser(User user) throws NoSuchAlgorithmException {
+        String encodedhash = Encrypter.encryptEmail(user);
+        user.setEmailSHA512(encodedhash);
+        user.setVerifiedEmail(false);
+
+        senderMailService.enviar(user); /*TODO ABRIR THREAD*/
+        return userRepository.save(user);
     }
 
     private void updatedUserDateList(User user, Optional<User> optionalUser) {
@@ -46,7 +55,7 @@ public class UserService {
 
     public User findUser(String cpf) {
         if(cpf != null) {
-            return userRepository.findBycpf(cpf).get();
+            return userRepository.findByEmail(cpf).get();
         }else {
             return null;
         }
